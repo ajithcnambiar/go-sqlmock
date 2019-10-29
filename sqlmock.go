@@ -57,6 +57,10 @@ type Sqlmock interface {
 	// the *ExpectedRollback allows to mock database response
 	ExpectRollback() *ExpectedRollback
 
+	// ExpectPing expects *sql.DB.Ping to be called.
+	// the *ExpectedPing allows to mock database response
+	ExpectPing() *ExpectedPing
+
 	// MatchExpectationsInOrder gives an option whether to match all
 	// expectations in the order they were set or not.
 	//
@@ -509,6 +513,18 @@ func (c *sqlmock) ExpectRollback() *ExpectedRollback {
 	return e
 }
 
+func (c *sqlmock) ExpectPing() *ExpectedPing {
+	for _, expect := range c.expected {
+		if e, ok := expect.(*ExpectedPing); ok {
+			e.err = nil
+			return e
+		}
+	}
+	e := &ExpectedPing{}
+	c.expected = append(c.expected, e)
+	return e
+}
+
 // Commit meets http://golang.org/pkg/database/sql/driver/#Tx
 func (c *sqlmock) Commit() error {
 	var expected *ExpectedCommit
@@ -587,3 +603,9 @@ func (c *sqlmock) NewRows(columns []string) *Rows {
 	r.converter = c.converter
 	return r
 }
+
+// //Ping meets https://golang.org/pkg/database/sql/driver/#Pinger
+// func (c *sqlmock) Ping(ctx context.Context) error {
+// 	fmt.Println("Inside Ping!!!!!")
+// 	return nil
+// }

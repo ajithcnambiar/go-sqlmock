@@ -23,7 +23,7 @@ interface, which was not required or useful for mocking and was removed. Hope it
 
 ## Install
 
-    go get github.com/DATA-DOG/go-sqlmock
+    go get github.com/ajithcnambiar/go-sqlmock
 
 ## Documentation and Examples
 
@@ -95,7 +95,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/ajithcnambiar/go-sqlmock"
 )
 
 // a successful case

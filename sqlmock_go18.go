@@ -99,6 +99,11 @@ func (c *sqlmock) PrepareContext(ctx context.Context, query string) (driver.Stmt
 // for now we do not have a Ping expectation
 // may be something for the future
 func (c *sqlmock) Ping(ctx context.Context) error {
+	for _, expect := range c.expected {
+		if e, ok := expect.(*ExpectedPing); ok {
+			return e.err
+		}
+	}
 	return nil
 }
 

@@ -84,6 +84,11 @@ type ExpectedCommit struct {
 	commonExpectation
 }
 
+// ExpectedPing is used to manage *sql.Ping expectation
+type ExpectedPing struct {
+	commonExpectation
+}
+
 // WillReturnError allows to set an error for *sql.Tx.Close action
 func (e *ExpectedCommit) WillReturnError(err error) *ExpectedCommit {
 	e.err = err
@@ -93,6 +98,24 @@ func (e *ExpectedCommit) WillReturnError(err error) *ExpectedCommit {
 // String returns string representation
 func (e *ExpectedCommit) String() string {
 	msg := "ExpectedCommit => expecting transaction Commit"
+	if e.err != nil {
+		msg += fmt.Sprintf(", which should return error: %s", e.err)
+	}
+	return msg
+}
+
+// WillReturnError allows ping failure
+func (e *ExpectedPing) WillReturnError(err error) *ExpectedPing {
+	e.err = err
+	if err == nil {
+		e.triggered = true
+	}
+	return e
+}
+
+// String returns string representation
+func (e *ExpectedPing) String() string {
+	msg := "ExpectedPing => expecting ping"
 	if e.err != nil {
 		msg += fmt.Sprintf(", which should return error: %s", e.err)
 	}
